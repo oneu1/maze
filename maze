@@ -1,0 +1,79 @@
+function solveMaze(maze, start, end)
+    n = size(maze, 1);
+    m = size(maze, 2);
+    visited = zeros(n, m);
+    path = zeros(n, m);
+    if dfs(maze, start(1), start(2), end(1), end(2), visited, path) == %T then
+        disp("Path found:");
+        displayPath(path, start, end);
+    else
+        disp("No path found");
+    end
+endfunction
+
+function result = dfs(maze, x, y, ex, ey, visited, path)
+    n = size(maze, 1);
+    m = size(maze, 2);
+    if x < 1 | x > n | y < 1 | y > m then
+        result = %F;
+        return;
+    end
+    if maze(x, y) == 1 | visited(x, y) == 1 then
+        result = %F;
+        return;
+    end
+    if x == ex & y == ey then
+        path(x, y) = 1;
+        result = %T;
+        return;
+    end
+    visited(x, y) = 1;
+    if dfs(maze, x - 1, y, ex, ey, visited, path) == %T then
+        path(x, y) = 1;
+        result = %T;
+        return;
+    end
+    if dfs(maze, x + 1, y, ex, ey, visited, path) == %T then
+        path(x, y) = 1;
+        result = %T;
+        return;
+    end
+    if dfs(maze, x, y - 1, ex, ey, visited, path) == %T then
+        path(x, y) = 1;
+        result = %T;
+        return;
+    end
+    if dfs(maze, x, y + 1, ex, ey, visited, path) == %T then
+        path(x, y) = 1;
+        result = %T;
+        return;
+    end
+    result = %F;
+endfunction
+
+function displayPath(path, start, end)
+    [n, m] = size(path);
+    for i = 1:n
+        for j = 1:m
+            if path(i, j) == 1 then
+                printf(" * ");
+            else
+                printf(" . ");
+            end
+        end
+        printf("\n");
+    end
+endfunction
+
+maze = [
+    0, 1, 0, 0, 0, 0;
+    0, 1, 0, 1, 1, 0;
+    0, 1, 0, 0, 0, 0;
+    0, 0, 0, 1, 1, 0;
+    1, 1, 0, 1, 0, 0;
+    0, 0, 0, 0, 0, 0
+];
+
+start = [1, 1];
+end = [6, 6];
+solveMaze(maze, start, end);
